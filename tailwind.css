@@ -1,0 +1,144 @@
+import { Link } from 'react-router';
+import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
+
+export default function Cart() {
+  // Статичные данные корзины
+  const cartItems = [
+    {
+      book: {
+        id: '1',
+        title: 'Война и мир',
+        author: 'Лев Толстой',
+        price: 1200,
+        cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&h=300&fit=crop',
+      },
+      quantity: 1,
+    },
+    {
+      book: {
+        id: '2',
+        title: 'Преступление и наказание',
+        author: 'Фёдор Достоевский',
+        price: 950,
+        cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=300&fit=crop',
+      },
+      quantity: 2,
+    },
+  ];
+
+  const total = cartItems.reduce((sum, item) => sum + item.book.price * item.quantity, 0);
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Breadcrumbs */}
+      <nav className="text-sm text-gray-600 mb-6">
+        <Link to="/" className="hover:text-blue-600">Главная</Link>
+        <span className="mx-2">/</span>
+        <span className="text-gray-900">Корзина</span>
+      </nav>
+
+      <h1 className="text-3xl font-bold mb-8">Корзина</h1>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Cart Items */}
+        <div className="lg:col-span-2 space-y-4">
+          {cartItems.map((item) => (
+            <div key={item.book.id} className="bg-white rounded-lg shadow-sm p-6 flex gap-6">
+              {/* Image */}
+              <img
+                src={item.book.cover}
+                alt={item.book.title}
+                className="w-24 h-36 object-cover rounded"
+              />
+
+              {/* Info */}
+              <div className="flex-1">
+                <Link to={`/book/${item.book.id}`} className="hover:text-blue-600">
+                  <h3 className="font-semibold text-lg mb-1">{item.book.title}</h3>
+                </Link>
+                <p className="text-sm text-gray-600 mb-4">{item.book.author}</p>
+
+                <div className="flex items-center justify-between">
+                  {/* Quantity */}
+                  <div className="flex items-center gap-3">
+                    <button className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100" disabled>
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="w-12 text-center font-medium">{item.quantity}</span>
+                    <button className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100" disabled>
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* Price */}
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-blue-600">
+                      {item.book.price * item.quantity} ₽
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {item.book.price} ₽ × {item.quantity}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Delete */}
+              <button className="text-red-500 hover:text-red-700" disabled>
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+          ))}
+
+          {/* Empty Cart Message (скрыто) */}
+          <div className="hidden bg-white rounded-lg shadow-sm p-12 text-center">
+            <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">Корзина пуста</h3>
+            <p className="text-gray-500 mb-6">Добавьте книги из каталога</p>
+            <Link
+              to="/catalog"
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+            >
+              Перейти в каталог
+            </Link>
+          </div>
+        </div>
+
+        {/* Order Summary */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-lg shadow-sm p-6 sticky top-20">
+            <h2 className="text-xl font-bold mb-6">Итого</h2>
+
+            <div className="space-y-3 mb-6">
+              <div className="flex justify-between text-gray-600">
+                <span>Товары ({cartItems.length}):</span>
+                <span>{total} ₽</span>
+              </div>
+              <div className="flex justify-between text-gray-600">
+                <span>Доставка:</span>
+                <span className="text-green-600">Бесплатно</span>
+              </div>
+              <div className="border-t pt-3 flex justify-between text-xl font-bold">
+                <span>К оплате:</span>
+                <span className="text-blue-600">{total} ₽</span>
+              </div>
+            </div>
+
+            <Link
+              to="/checkout"
+              className="block w-full bg-blue-600 text-white text-center py-4 rounded-lg font-semibold hover:bg-blue-700 transition mb-3"
+            >
+              Оформить заказ
+            </Link>
+
+            <Link
+              to="/catalog"
+              className="block w-full bg-gray-100 text-gray-700 text-center py-4 rounded-lg font-semibold hover:bg-gray-200 transition"
+            >
+              Продолжить покупки
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
